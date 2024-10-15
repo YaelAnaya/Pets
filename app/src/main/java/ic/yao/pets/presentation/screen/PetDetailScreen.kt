@@ -1,4 +1,4 @@
-package ic.yao.pets.presentation
+package ic.yao.pets.presentation.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -20,24 +20,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ic.yao.pets.data.DataProvider
 import ic.yao.pets.data.Pet
+import ic.yao.pets.presentation.TopAppBar
 import ic.yao.pets.ui.theme.PetsTheme
 
 @Composable
 fun PetDetailScreen(
     modifier: Modifier = Modifier,
-    pet: Pet,
-    onBack: () -> Unit
+    pet: Pet
 ) {
-    Scaffold(
-        topBar = {
-            TopAppBar(title = "Pet detail", onBack = { onBack() })
-        }
-    ) { innerPadding ->
-        PetDetailContent(
-            modifier = modifier.padding(innerPadding),
-            pet = pet
-        )
-    }
+    PetDetailContent(pet = pet)
 }
 
 @Composable
@@ -79,8 +70,8 @@ fun PetDetailContent(
 @Preview
 @Composable
 fun PetDetailPreview() {
-    val pet = DataProvider.petList.first()
+    val pet = DataProvider.petList.random()
     PetsTheme {
-        PetDetailScreen(pet = pet, onBack = {})
+        PetDetailScreen(pet = pet)
     }
 }

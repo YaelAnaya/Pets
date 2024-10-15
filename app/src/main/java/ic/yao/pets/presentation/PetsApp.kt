@@ -1,5 +1,6 @@
 package ic.yao.pets.presentation
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -14,8 +15,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -29,115 +32,53 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import ic.yao.pets.R
 import ic.yao.pets.data.Pet
+import ic.yao.pets.presentation.navigation.AppNavigation
 
+/**
+ * This composable will be used to create the main structure of our app.
+ * The content in the scaffold will be the top bar and the navigation graph.
+ * */
 @Composable
 fun PetsApp(
     modifier: Modifier = Modifier,
-    petList: List<Pet>,
-    onPetClick: (Int) -> Unit,
-    onShuffle: () -> Unit
 ){
     Scaffold(
         modifier = modifier,
         topBar = {
-            TopAppBar(
-                title = "Pets",
-                onAction = { onShuffle() }
-            )
+            TopAppBar(titleId = R.string.app_name)
         },
     ) { innerPadding ->
-        PetList(
-            modifier = Modifier.padding(innerPadding),
-            petList = petList,
-            onPetClick = onPetClick
+        AppNavigation(
+            modifier = Modifier.padding(innerPadding)
         )
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun PetList(
-    modifier: Modifier = Modifier,
-    petList: List<Pet>,
-    onPetClick: (Int) -> Unit,
-){
-    LazyColumn(
-        modifier = modifier
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
-    ) {
-        items(
-            items = petList,
-            key = { pet -> pet.id }
-        ){ pet ->
-            PetItem(
-                pet = pet,
-                onPetClick = onPetClick
-            )
-        }
-    }
-}
 
-@Composable
-fun PetItem(
-    modifier: Modifier = Modifier,
-    pet: Pet,
-    onPetClick: (Int) -> Unit
-){
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable { onPetClick(pet.id) }
-            .padding(vertical = 12.dp, horizontal = 15.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(18.dp)
-    ) {
-        Image(
-            modifier = modifier
-                .size(95.dp)
-                .clip(CircleShape),
-            painter = painterResource(id = pet.drawableId),
-            contentScale = ContentScale.FillBounds,
-            contentDescription = null
-        )
-        Column(
-            modifier= modifier,
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.Start
-        ) {
-            Text(
-                text = pet.name,
-                style = MaterialTheme.typography.titleSmall
-            )
-            Text(
-                text = "Age: ${pet.age}",
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopAppBar(
     modifier: Modifier = Modifier,
-    title: String,
-    onAction: () -> Unit = {},
+    @StringRes titleId: Int,
+    canBack: Boolean = false,
     onBack: () -> Unit = {}
 ){
     CenterAlignedTopAppBar(
-        title = { Text(text = title, style = MaterialTheme.typography.headlineMedium)},
-        actions = {
-            IconButton(onClick = { onAction()}) {
-                Icon(imageVector = Icons.Default.Refresh, contentDescription = null)
-            }
-        },
+        modifier = modifier,
+        title = { Text(text = stringResource(id = titleId), style = MaterialTheme.typography.headlineMedium)},
         navigationIcon = {
-            IconButton(onClick = { onBack()}) {
-                Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
+            if (canBack){
+                IconButton(onClick = onBack) {
+                    Icon(
+                        imageVector = Icons.Rounded.ArrowBack,
+                        contentDescription = "Back"
+                    )
+                }
             }
         }
     )

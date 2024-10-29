@@ -28,7 +28,10 @@ fun PetDetailScreen(
     modifier: Modifier = Modifier,
     pet: Pet
 ) {
-    PetDetailContent(pet = pet)
+    PetDetailContent(
+        modifier = modifier,
+        pet = pet
+    )
 }
 
 @Composable
@@ -45,11 +48,11 @@ fun PetDetailContent(
     ) {
         Image(
             modifier = modifier
-                .size(130.dp)
+                .size(200.dp)
                 .clip(shape = CircleShape),
             painter = painterResource(id = pet.drawableId),
             contentDescription = "Pet cover image",
-            contentScale = ContentScale.FillBounds
+            contentScale = ContentScale.Crop
         )
         Text(
             text = pet.name,
